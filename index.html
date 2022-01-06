@@ -1,16 +1,32 @@
 <html>
     <head>
-        <script type="text/javascript">
-            console.log("hallohallo")
-            function update(){
-                console.log("haha")
-                let value = document.getElementById("myRange").value
-                document.getElementById("output").innerHTML = value
-            }
-        </script>    
     </head>
-    Albedo
-    <input type="range" min="1" max="100" value="50" id="myRange" oninput="update()">
-    <span id="output">
+    <label for="albedoInput">Albedo:</label>
+    <input type="range" min="0" max="100" value="30" id="albedoInput" oninput="update()">
+    <span id="albedoValue">
     </span>
+    <span id="surfTempValue">
+    </span>
+    <script type="text/javascript">
+        function surfaceTemperature(albedo, solar, emissivity, absorptivity){
+            const sigma = 5.67e-8
+            const aE = albedo * (1 - absorptivity)**2
+            const aPrime = (1 - absorptivity) * (1 - albedo)
+            const temp = Math.pow((solar*(1 - aE + aPrime))/(4 * sigma * (2-emissivity)), 0.25)
+            console.log("sigma", sigma, "aE", aE, "aPrime", aPrime, "temp", temp)
+            return temp
+        }
+        function update(){
+            let albedo = document.getElementById("albedoInput").value / 100
+            document.getElementById("albedoValue").innerHTML = albedo
+
+            let solar = 1360
+            let emissivity = 0.9
+            let absorptivity = 0.105
+            let surfTemp = surfaceTemperature(albedo, solar, emissivity, absorptivity)
+            document.getElementById("surfTempValue").innerHTML = surfTemp
+            
+        }
+        update()
+    </script>   
 </html>
