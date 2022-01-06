@@ -16,41 +16,49 @@
             li::before {
                 content: '-';
                 position: absolute;
-                left: -6.5px;          /* Adjust this value so that it appears where you want. */
+                left: -6.5px;
                 top: -1px;
-                font-size: 1.1em;      /* Adjust this value so that it appears what size you want. */
+                font-size: 1.1em;
             }
             .markings li {
                 position: absolute;
             }
 
             .markings li:nth-child(1) {
-                top: 0%
+                top: 4%
             }
             .markings li:nth-child(2) {
-                top: 13%
+                top: 17%
             }
             .markings li:nth-child(3) {
-                top: 26%
+                top: 30%
             }
             .markings li:nth-child(4) {
-                top: 39%
+                top: 43%
             }
             .markings li:nth-child(5) {
-                top: 52%
+                top: 56%
             }
             .markings li:nth-child(6) {
-                top: 65%
+                top: 69%
             }
             .markings li:nth-child(7) {
-                top: 78%
+                top: 82%
             }
-            .mercury {
+            .glass {
+                display: flex;
+                position: absolute;
+                top: 0%;
+                flex-direction: column;
+                height: 100%;
+                width: 100%;    
+                justify-content: flex-end;
+            }
+            #mercury {
                 background-color: red;
                 width: 100%;
-                position: absolute;
-                bottom: 0px;
-                top: 90%;
+                height: 15%;
+                transition: height 0.2s ease-in-out;
                 border-radius: 0 0 50px 50px;
             }
         </style>
@@ -80,7 +88,9 @@
                 <li>-150</li>
                 <li>-200</li>
             </ul>
-            <div class="mercury"></div>
+            <div class="glass">
+                <div id="mercury"></div>
+            </div>
         </div>
 
     </div>
@@ -94,6 +104,20 @@
             // console.log("sigma", sigma, "aE", aE, "aPrime", aPrime, "temp", temp)
             return tempCelsius
         }
+        function calcTemperaturePosition(temp, minTemp, maxTemp, positionMinTemp, positionMaxTemp){
+            const diffToMin = temp - minTemp
+            const diffMinMax = maxTemp - minTemp
+            const diffPositionMinMax = positionMaxTemp - positionMinTemp
+            const position = diffToMin / diffMinMax * diffPositionMinMax + positionMinTemp
+            return position
+        }
+        console.log('-200 = ', calcTemperaturePosition(-200, -200, 100, 15, 93))
+        console.log('-150 = ', calcTemperaturePosition(-150, -200, 100, 15, 93))
+        console.log('-100 = ', calcTemperaturePosition(-100, -200, 100, 15, 93))
+        console.log('-50 = ', calcTemperaturePosition(-50, -200, 100, 15, 93))
+        console.log('0 = ', calcTemperaturePosition(0, -200, 100, 15, 93))
+        console.log('50 = ', calcTemperaturePosition(50, -200, 100, 15, 93))
+        console.log('100 = ', calcTemperaturePosition(100, -200, 100, 15, 93))
         function update(){
             let albedo = document.getElementById("albedoInput").value / 100
             document.getElementById("albedoValue").innerHTML = albedo
@@ -107,6 +131,13 @@
             let surfTemp = surfaceTemperature(albedo, solar, emissivity, absorptivity)
             document.getElementById("surfTempValue").innerHTML = Math.round(surfTemp) + " °C"
             
+            // TODO: make sure that ultimate temp borders are not in the possible ranges!
+            let minTemp = -200
+            let maxTemp = 100
+            let positionMinTemp = 15
+            let positionMaxTemp = 93
+            let posTemp = calcTemperaturePosition(surfTemp, minTemp, maxTemp, positionMinTemp, positionMaxTemp)
+            document.getElementById("mercury").style.height = posTemp + "%"
         }
         update()
     </script>   
