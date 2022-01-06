@@ -1,30 +1,111 @@
 <html>
     <head>
+        <style>
+            .thermometer {
+                position: relative;
+                border-radius: 50px;
+                border-color: black;
+                border: 4px solid;
+                height: 300px;
+                width: 30px;
+            }
+            li {
+                list-style-type: none;
+                padding-left: 10px;
+            }
+            li::before {
+                content: '-';
+                position: absolute;
+                left: -6.5px;          /* Adjust this value so that it appears where you want. */
+                top: -1px;
+                font-size: 1.1em;      /* Adjust this value so that it appears what size you want. */
+            }
+            .markings li {
+                position: absolute;
+            }
+
+            .markings li:nth-child(1) {
+                top: 0%
+            }
+            .markings li:nth-child(2) {
+                top: 13%
+            }
+            .markings li:nth-child(3) {
+                top: 26%
+            }
+            .markings li:nth-child(4) {
+                top: 39%
+            }
+            .markings li:nth-child(5) {
+                top: 52%
+            }
+            .markings li:nth-child(6) {
+                top: 65%
+            }
+            .markings li:nth-child(7) {
+                top: 78%
+            }
+            .mercury {
+                background-color: red;
+                width: 100%;
+                position: absolute;
+                bottom: 0px;
+                top: 90%;
+                border-radius: 0 0 50px 50px;
+            }
+        </style>
     </head>
     <label for="albedoInput">Albedo:</label>
     <input type="range" min="0" max="100" value="30" id="albedoInput" oninput="update()">
     <span id="albedoValue">
     </span>
-    <span id="surfTempValue">
-    </span>
+    <div>
+        <label for="solarInput"> Solar:</label>
+        <input type="range" min="0" max="200" value="100" id="solarInput" oninput="update()">
+        <span id="solarValue">
+        </span>
+        </div>  
+    <div>
+        <span id="surfTempValue">
+        </span>    
+    </div>
+    <div class="thermoContainer">
+        <div class="thermometer">
+            <ul class="markings">
+                <li>100</li>
+                <li>50</li>
+                <li>0</li>
+                <li>-50</li>
+                <li>-100</li>
+                <li>-150</li>
+                <li>-200</li>
+            </ul>
+            <div class="mercury"></div>
+        </div>
+
+    </div>
     <script type="text/javascript">
         function surfaceTemperature(albedo, solar, emissivity, absorptivity){
             const sigma = 5.67e-8
             const aE = albedo * (1 - absorptivity)**2
             const aPrime = (1 - absorptivity) * (1 - albedo)
             const temp = Math.pow((solar*(1 - aE + aPrime))/(4 * sigma * (2-emissivity)), 0.25)
-            console.log("sigma", sigma, "aE", aE, "aPrime", aPrime, "temp", temp)
-            return temp
+            const tempCelsius = temp - 273.15
+            // console.log("sigma", sigma, "aE", aE, "aPrime", aPrime, "temp", temp)
+            return tempCelsius
         }
         function update(){
             let albedo = document.getElementById("albedoInput").value / 100
             document.getElementById("albedoValue").innerHTML = albedo
 
-            let solar = 1360
+            let solarPercent = document.getElementById("solarInput").value
+            document.getElementById("solarValue").innerHTML = solarPercent + " %"
+
+            let solar = 1360 * solarPercent / 100
             let emissivity = 0.9
             let absorptivity = 0.105
             let surfTemp = surfaceTemperature(albedo, solar, emissivity, absorptivity)
-            document.getElementById("surfTempValue").innerHTML = surfTemp
+            document.getElementById("surfTempValue").innerHTML = Math.round(surfTemp) + " °C"
             
         }
         update()
