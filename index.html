@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <script type="text/javascript">
+            console.log("hallohallo")
+            function update(){
+                console.log("haha")
+                let value = document.getElementById("myRange").value
+                document.getElementById("output").innerHTML = value
+            }
+        </script>    
+    </head>
+    Albedo
+    <input type="range" min="1" max="100" value="50" id="myRange" oninput="update()">
+    <span id="output">
+    </span>
+</html>
