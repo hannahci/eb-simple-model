@@ -11,7 +11,7 @@
             }
             li {
                 list-style-type: none;
-                padding-left: 10px;
+                padding-left: 10px; /* for space between markings on the thermometer and labels */
             }
             li::before {
                 content: '-';
@@ -22,6 +22,8 @@
             }
             .markings li {
                 position: absolute;
+                width: 52px;
+                text-align: right;
             }
 
             .markings li:nth-child(1) {
@@ -60,32 +62,57 @@
                 height: 15%;
                 border-radius: 0 0 50px 50px;
             }
+            .inputRowsContainer {
+                display: flex;
+                flex-direction: column;
+                /* background-color: palevioletred; */
+                width: 400px;
+            }
+            .inputRow {
+                display: flex;
+                flex-direction: row;
+                /* background-color: aquamarine; */
+                gap: 10px;
+                padding-bottom: 10px;
+                /* justify-content: space-between; */
+            }
+            .inputRow label {
+                width: 30%;
+                /* background-color: brown; */
+            }
+            .resultContainer {
+                padding: 10px 0 30px 0;
+            }
         </style>
     </head>
-    <label for="albedoInput">Albedo:</label>
-    <input type="range" min="0" max="100" value="30" id="albedoInput" oninput="update()">
-    <span id="albedoValue">
-    </span>
-    <div>
-        <label for="solarInput"> Solar:</label>
-        <input type="range" min="0" max="200" value="100" id="solarInput" oninput="update()">
-        <span id="solarValue">
-        </span>
+    <div class="inputRowsContainer">
+        <div class="inputRow">
+            <label for="albedoInput">Albedo:</label>
+            <input type="range" min="0" max="100" value="30" id="albedoInput" oninput="update()">
+            <span id="albedoValue">
+            </span>
+        </div>
+        <div class="inputRow">
+            <label for="solarInput"> Solar intensity:</label>
+            <input type="range" min="1" max="200" value="100" id="solarInput" oninput="update()">
+            <span id="solarValue">
+            </span>
         </div>  
-    <div>
-        <span id="surfTempValue">
-        </span>    
+    </div>
+    <div class="resultContainer">
+        <b><span id="surfTempValue">
+        </span></b>
     </div>
     <div class="thermoContainer">
         <div class="thermometer">
             <ul class="markings">
-                <li>100</li>
-                <li>50</li>
-                <li>0</li>
-                <li>-50</li>
-                <li>-100</li>
-                <li>-150</li>
-                <li>-200</li>
+                <li>100 °C</li>
+                <li>50 °C</li>
+                <li>0 °C</li>
+                <li>-50 °C</li>
+                <li>-100 °C</li>
+                <li>-150 °C</li>
+                <li>-200 °C</li>
             </ul>
             <div class="glass">
                 <div id="mercury"></div>
@@ -122,13 +149,13 @@
             document.getElementById("albedoValue").innerHTML = albedo
 
             let solarPercent = document.getElementById("solarInput").value
-            document.getElementById("solarValue").innerHTML = solarPercent + " %"
+            document.getElementById("solarValue").innerHTML = solarPercent + " % of sun"
 
             let solar = 1360 * solarPercent / 100
             let emissivity = 0.9
             let absorptivity = 0.105
             let surfTemp = surfaceTemperature(albedo, solar, emissivity, absorptivity)
-            document.getElementById("surfTempValue").innerHTML = Math.round(surfTemp) + " °C"
+            document.getElementById("surfTempValue").innerHTML = "=> Surface temperature: " + Math.round(surfTemp) + " °C"
             
             // TODO: make sure that ultimate temp borders are not in the possible ranges!
             let minTemp = -200
