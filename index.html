@@ -62,11 +62,16 @@
                 height: 15%;
                 border-radius: 0 0 50px 50px;
             }
+            .contentContainer {
+                display: flex;
+                flex-direction: row;
+                /* background-color: mediumaquamarine; */
+            }
             .inputRowsContainer {
                 display: flex;
                 flex-direction: column;
                 /* background-color: palevioletred; */
-                width: 400px;
+                width: 370px;
             }
             .inputRow {
                 display: flex;
@@ -74,51 +79,60 @@
                 /* background-color: aquamarine; */
                 gap: 10px;
                 padding-bottom: 10px;
-                /* justify-content: space-between; */
+                align-items: baseline;
             }
             .inputRow label {
                 width: 30%;
                 /* background-color: brown; */
             }
             .resultContainer {
-                padding: 10px 0 30px 0;
+                padding: 10px 0 10px 0;
+                /* background-color: bisque; */
+            }
+            .outputColumn {
+                display: flex;
+                flex-direction: column;
             }
         </style>
     </head>
-    <div class="inputRowsContainer">
-        <div class="inputRow">
-            <label for="albedoInput">Albedo:</label>
-            <input type="range" min="0" max="100" value="30" id="albedoInput" oninput="update()">
-            <span id="albedoValue">
-            </span>
+
+    <div class="contentContainer">
+        <div class="inputRowsContainer">
+            <div class="inputRow">
+                <label for="albedoInput">Albedo:</label>
+                <input type="range" min="0" max="100" value="30" id="albedoInput" oninput="update()">
+                <span id="albedoValue">
+                </span>
+            </div>
+            <div class="inputRow">
+                <label for="solarInput"> Solar intensity:</label>
+                <input type="range" min="1" max="200" value="100" id="solarInput" oninput="update()">
+                <span id="solarValue">
+                </span>
+            </div>  
         </div>
-        <div class="inputRow">
-            <label for="solarInput"> Solar intensity:</label>
-            <input type="range" min="1" max="200" value="100" id="solarInput" oninput="update()">
-            <span id="solarValue">
-            </span>
-        </div>  
-    </div>
-    <div class="resultContainer">
-        <b><span id="surfTempValue">
-        </span></b>
-    </div>
-    <div class="thermoContainer">
-        <div class="thermometer">
-            <ul class="markings">
-                <li>100 °C</li>
-                <li>50 °C</li>
-                <li>0 °C</li>
-                <li>-50 °C</li>
-                <li>-100 °C</li>
-                <li>-150 °C</li>
-                <li>-200 °C</li>
-            </ul>
-            <div class="glass">
-                <div id="mercury"></div>
+        <div class="outputColumn">
+            <div class="resultContainer">
+                <b><span id="surfTempValue">
+                </span></b>
+            </div>
+            <div class="thermoContainer">
+                <div class="thermometer">
+                    <ul class="markings">
+                        <li>100 °C</li>
+                        <li>50 °C</li>
+                        <li>0 °C</li>
+                        <li>-50 °C</li>
+                        <li>-100 °C</li>
+                        <li>-150 °C</li>
+                        <li>-200 °C</li>
+                    </ul>
+                    <div class="glass">
+                        <div id="mercury"></div>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
     <script type="text/javascript">
         function surfaceTemperature(albedo, solar, emissivity, absorptivity){
@@ -155,7 +169,7 @@
             let emissivity = 0.9
             let absorptivity = 0.105
             let surfTemp = surfaceTemperature(albedo, solar, emissivity, absorptivity)
-            document.getElementById("surfTempValue").innerHTML = "=> Surface temperature: " + Math.round(surfTemp) + " °C"
+            document.getElementById("surfTempValue").innerHTML = Math.round(surfTemp) + " °C surface temperature"
             
             // TODO: make sure that ultimate temp borders are not in the possible ranges!
             let minTemp = -200
