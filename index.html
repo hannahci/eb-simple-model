@@ -11,7 +11,7 @@
             }
             li {
                 list-style-type: none;
-                padding-left: 10px; /* for space between markings on the thermometer and labels */
+                padding-left: 0px; /* for space between markings on the thermometer and labels */
             }
             li::before {
                 content: '-';
@@ -22,7 +22,7 @@
             }
             .markings li {
                 position: absolute;
-                width: 52px;
+                width: 70px;
                 text-align: right;
             }
 
@@ -71,7 +71,7 @@
                 display: flex;
                 flex-direction: column;
                 /* background-color: palevioletred; */
-                width: 370px;
+                width: 500px;
             }
             .inputRow {
                 display: flex;
@@ -84,6 +84,9 @@
             .inputRow label {
                 width: 30%;
                 /* background-color: brown; */
+            }
+            .inputRow span {
+                width: 25%;
             }
             .resultContainer {
                 padding: 10px 0 10px 0;
