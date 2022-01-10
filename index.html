@@ -119,6 +119,12 @@
                 <span id="absorbValue">
                 </span>
             </div>
+            <div class="inputRow">
+                <label for="emissInput">Infrared emissivity:</label>
+                <input type="range" min="0" max="100" value="90" id="emissInput" oninput="update()">
+                <span id="emissValue">
+                </span>
+            </div>
         </div>
         <div class="outputColumn">
             <div class="resultContainer">
@@ -182,10 +188,13 @@
             let absorbance = document.getElementById("absorbInput").value / 1000
             document.getElementById("absorbValue").innerHTML = absorbance
 
+            let emissivity = document.getElementById("emissInput").value / 100
+            document.getElementById("emissValue").innerHTML = emissivity
+
             let solar = 1360 * solarPercent / 100
-            let emissivity = 0.9
             let surfTemp = surfaceTemperature(albedo, solar, emissivity, absorbance)
             document.getElementById("surfTempValue").innerHTML = Math.round(surfTemp * 10) / 10 + " °C surface temperature"
+            let atmTemp = atmosphericTemperature(albedo, solar, emissivity, absorbance)
             
             // TODO: make sure that ultimate temp borders are not in the possible ranges!
             let minTemp = -200
