@@ -6,7 +6,7 @@
                 border-radius: 50px;
                 border-color: black;
                 border: 4px solid;
-                height: 300px;
+                height: 340px;
                 width: 30px;
             }
             li {
@@ -30,22 +30,25 @@
                 top: 4%
             }
             .markings li:nth-child(2) {
-                top: 17%
+                top: 15%
             }
             .markings li:nth-child(3) {
-                top: 30%
+                top: 26%
             }
             .markings li:nth-child(4) {
-                top: 43%
+                top: 37%
             }
             .markings li:nth-child(5) {
-                top: 56%
+                top: 48%
             }
             .markings li:nth-child(6) {
-                top: 69%
+                top: 59%
             }
             .markings li:nth-child(7) {
-                top: 82%
+                top: 70%
+            }
+            .markings li:nth-child(8) {
+                top: 81%
             }
             .glass {
                 display: flex;
@@ -117,13 +120,13 @@
             </div>
             <div class="inputRow">
                 <label for="absorbInput">Optical absorbance:</label>
-                <input type="range" min="0" max="1000" value="105" id="absorbInput" oninput="update()">
+                <input type="range" min="0" max="300" value="105" id="absorbInput" oninput="update()">
                 <span id="absorbValue">
                 </span>
             </div>
             <div class="inputRow">
                 <label for="emissInput">Infrared emissivity:</label>
-                <input type="range" min="0" max="100" value="90" id="emissInput" oninput="update()">
+                <input type="range" min="70" max="100" value="90" id="emissInput" oninput="update()">
                 <span id="emissValue">
                 </span>
             </div>
@@ -143,6 +146,7 @@
                         <li>-100 °C</li>
                         <li>-150 °C</li>
                         <li>-200 °C</li>
+                        <li>-250 °C</li>
                     </ul>
                     <div class="glass">
                         <div id="surfaceTemp" class="mercury"></div>
@@ -165,6 +169,7 @@
                         <li>-100 °C</li>
                         <li>-150 °C</li>
                         <li>-200 °C</li>
+                        <li>-250 °C</li>
                     </ul>
                     <div class="glass">
                         <div id="atmTemp" class="mercury"></div>
@@ -221,10 +226,9 @@
             let atmTemp = atmosphericTemperature(albedo, solar, emissivity, absorbance)
             document.getElementById("atmTempValue").innerHTML = "Atmospheric<br \>temperature:<br \>" + Math.round(atmTemp * 10) / 10 + " °C"
             
-            // TODO: make sure that ultimate temp borders are not in the possible ranges!
-            let minTemp = -200
+            let minTemp = -250
             let maxTemp = 100
-            let positionMinTemp = 15
+            let positionMinTemp = 16
             let positionMaxTemp = 93
             let posSurfaceTemp = calcTemperaturePosition(surfTemp, minTemp, maxTemp, positionMinTemp, positionMaxTemp)
             document.getElementById("surfaceTemp").style.height = posSurfaceTemp + "%"
