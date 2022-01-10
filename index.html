@@ -56,7 +56,7 @@
                 width: 100%;    
                 justify-content: flex-end;
             }
-            #mercury {
+            .mercury {
                 background-color: red;
                 width: 100%;
                 height: 15%;
@@ -102,17 +102,23 @@
     <div class="contentContainer">
         <div class="inputRowsContainer">
             <div class="inputRow">
-                <label for="albedoInput">Albedo:</label>
+                <label for="solarInput"> Solar intensity:</label>
+                <input type="range" min="70" max="130" value="100" id="solarInput" oninput="update()">
+                <span id="solarValue">
+                </span>
+            </div>  
+            <div class="inputRow">
+                <label for="albedoInput">Planet albedo:</label>
                 <input type="range" min="0" max="100" value="30" id="albedoInput" oninput="update()">
                 <span id="albedoValue">
                 </span>
             </div>
             <div class="inputRow">
-                <label for="solarInput"> Solar intensity:</label>
-                <input type="range" min="1" max="200" value="100" id="solarInput" oninput="update()">
-                <span id="solarValue">
+                <label for="absorbInput">Optical absorbance:</label>
+                <input type="range" min="0" max="1000" value="105" id="absorbInput" oninput="update()">
+                <span id="absorbValue">
                 </span>
-            </div>  
+            </div>
         </div>
         <div class="outputColumn">
             <div class="resultContainer">
@@ -131,20 +137,31 @@
                         <li>-200 °C</li>
                     </ul>
                     <div class="glass">
-                        <div id="mercury"></div>
+                        <div id="surfaceTemp" class="mercury"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <script type="text/javascript">
-        function surfaceTemperature(albedo, solar, emissivity, absorptivity){
+        function surfaceTemperature(albedo, solar, emissivity, absorbance){
             const sigma = 5.67e-8
-            const aE = albedo * (1 - absorptivity)**2
-            const aPrime = (1 - absorptivity) * (1 - albedo)
+            const aE = albedo * (1 - absorbance)**2
+            const aPrime = (1 - absorbance) * (1 - albedo)
             const temp = Math.pow((solar*(1 - aE + aPrime))/(4 * sigma * (2-emissivity)), 0.25)
             const tempCelsius = temp - 273.15
-            // console.log("sigma", sigma, "aE", aE, "aPrime", aPrime, "temp", temp)
+            return tempCelsius
+        }
+        function atmosphericTemperature(albedo, solar, emissivity, absorbance){
+            const surfTemp = surfaceTemperature(albedo, solar, emissivity, absorbance) + 273.15
+            const surfTemp4 = Math.pow(surfTemp, 4)
+            const sigma = 5.67e-8
+            const aE = albedo * (1 - absorbance)**2
+            const aPrime = (1 - absorbance) * (1 - albedo)
+            const upper = 4 * sigma * surfTemp4 - solar * aPrime
+            const lower = 4 * emissivity * sigma
+            const temp = Math.pow((4 * sigma * surfTemp4 - solar * aPrime)/(4 * emissivity * sigma), 0.25)
+            const tempCelsius = temp - 273.15
             return tempCelsius
         }
         function calcTemperaturePosition(temp, minTemp, maxTemp, positionMinTemp, positionMaxTemp){
@@ -154,25 +171,21 @@
             const position = diffToMin / diffMinMax * diffPositionMinMax + positionMinTemp
             return position
         }
-        console.log('-200 = ', calcTemperaturePosition(-200, -200, 100, 15, 93))
-        console.log('-150 = ', calcTemperaturePosition(-150, -200, 100, 15, 93))
-        console.log('-100 = ', calcTemperaturePosition(-100, -200, 100, 15, 93))
-        console.log('-50 = ', calcTemperaturePosition(-50, -200, 100, 15, 93))
-        console.log('0 = ', calcTemperaturePosition(0, -200, 100, 15, 93))
-        console.log('50 = ', calcTemperaturePosition(50, -200, 100, 15, 93))
-        console.log('100 = ', calcTemperaturePosition(100, -200, 100, 15, 93))
+        console.log('atmTemp = ', atmosphericTemperature(0.3, 1360, 0.9, 0.105))
         function update(){
+            let solarPercent = document.getElementById("solarInput").value
+            document.getElementById("solarValue").innerHTML = solarPercent + " % of present"
+
             let albedo = document.getElementById("albedoInput").value / 100
             document.getElementById("albedoValue").innerHTML = albedo
 
-            let solarPercent = document.getElementById("solarInput").value
-            document.getElementById("solarValue").innerHTML = solarPercent + " % of sun"
+            let absorbance = document.getElementById("absorbInput").value / 1000
+            document.getElementById("absorbValue").innerHTML = absorbance
 
             let solar = 1360 * solarPercent / 100
             let emissivity = 0.9
-            let absorptivity = 0.105
-            let surfTemp = surfaceTemperature(albedo, solar, emissivity, absorptivity)
-            document.getElementById("surfTempValue").innerHTML = Math.round(surfTemp) + " °C surface temperature"
+            let surfTemp = surfaceTemperature(albedo, solar, emissivity, absorbance)
+            document.getElementById("surfTempValue").innerHTML = Math.round(surfTemp * 10) / 10 + " °C surface temperature"
             
             // TODO: make sure that ultimate temp borders are not in the possible ranges!
             let minTemp = -200
@@ -180,7 +193,7 @@
             let positionMinTemp = 15
             let positionMaxTemp = 93
             let posTemp = calcTemperaturePosition(surfTemp, minTemp, maxTemp, positionMinTemp, positionMaxTemp)
-            document.getElementById("mercury").style.height = posTemp + "%"
+            document.getElementById("surfaceTemp").style.height = posTemp + "%"
         }
         update()
     </script>   
