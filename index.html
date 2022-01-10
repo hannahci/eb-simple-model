@@ -67,14 +67,26 @@
             }
             .contentContainer {
                 display: flex;
+                flex-direction: column;
+                /* background-color: darkkhaki; */
+            }
+            .modelContainer {
+                display: flex;
                 flex-direction: row;
                 /* background-color: mediumaquamarine; */
+            }
+            .introductionRow {
+                display: flex;
+                flex-direction: column;
+                padding: 30px;
+                /* background-color: blueviolet; */
             }
             .inputRowsContainer {
                 display: flex;
                 flex-direction: column;
                 /* background-color: palevioletred; */
                 width: 500px;
+                padding: 10px;
             }
             .inputRow {
                 display: flex;
@@ -92,7 +104,7 @@
                 width: 25%;
             }
             .resultContainer {
-                padding: 10px 30px 10px 0;
+                padding: 10px 50px 10px 0;
                 width: 150px;
                 /* background-color: bisque; */
             }
@@ -105,79 +117,86 @@
     </head>
 
     <div class="contentContainer">
-        <div class="inputRowsContainer">
-            <div class="inputRow">
-                <label for="solarInput"> Solar intensity:</label>
-                <input type="range" min="70" max="130" value="100" id="solarInput" oninput="update()">
-                <span id="solarValue">
-                </span>
-            </div>  
-            <div class="inputRow">
-                <label for="albedoInput">Planet albedo:</label>
-                <input type="range" min="0" max="100" value="30" id="albedoInput" oninput="update()">
-                <span id="albedoValue">
-                </span>
-            </div>
-            <div class="inputRow">
-                <label for="absorbInput">Optical absorbance:</label>
-                <input type="range" min="0" max="300" value="105" id="absorbInput" oninput="update()">
-                <span id="absorbValue">
-                </span>
-            </div>
-            <div class="inputRow">
-                <label for="emissInput">Infrared emissivity:</label>
-                <input type="range" min="70" max="100" value="90" id="emissInput" oninput="update()">
-                <span id="emissValue">
-                </span>
-            </div>
+        <div class="introductionRow">
+            This simple energy balance model assumes an atmosphere that absorbes parts of the
+            incoming solar radiation ("optical absorbance") and has a specified infrared
+            emissivity.<br\>
+            You can see the calculated surface and atmospheric temperatures to the right.
         </div>
-        <div class="outputColumn">
-            <div class="resultContainer">
-                <b><span id="surfTempValue">
-                </span></b>
+        <div class="modelContainer">
+            <div class="inputRowsContainer">
+                <div class="inputRow">
+                    <label for="solarInput"> Solar intensity:</label>
+                    <input type="range" min="70" max="130" value="100" id="solarInput" oninput="update()">
+                    <span id="solarValue">
+                    </span>
+                </div>  
+                <div class="inputRow">
+                    <label for="albedoInput">Planet albedo:</label>
+                    <input type="range" min="0" max="100" value="30" id="albedoInput" oninput="update()">
+                    <span id="albedoValue">
+                    </span>
+                </div>
+                <div class="inputRow">
+                    <label for="absorbInput">Optical absorbance:</label>
+                    <input type="range" min="0" max="300" value="105" id="absorbInput" oninput="update()">
+                    <span id="absorbValue">
+                    </span>
+                </div>
+                <div class="inputRow">
+                    <label for="emissInput">Infrared emissivity:</label>
+                    <input type="range" min="70" max="100" value="90" id="emissInput" oninput="update()">
+                    <span id="emissValue">
+                    </span>
+                </div>
             </div>
-            <div class="thermoContainer">
-                <div class="thermometer">
-                    <ul class="markings">
-                        <li>100 °C</li>
-                        <li>50 °C</li>
-                        <li>0 °C</li>
-                        <li>-50 °C</li>
-                        <li>-100 °C</li>
-                        <li>-150 °C</li>
-                        <li>-200 °C</li>
-                        <li>-250 °C</li>
-                    </ul>
-                    <div class="glass">
-                        <div id="surfaceTemp" class="mercury"></div>
+            <div class="outputColumn">
+                <div class="resultContainer">
+                    <b><span id="surfTempValue">
+                    </span></b>
+                </div>
+                <div class="thermoContainer">
+                    <div class="thermometer">
+                        <ul class="markings">
+                            <li>100 °C</li>
+                            <li>50 °C</li>
+                            <li>0 °C</li>
+                            <li>-50 °C</li>
+                            <li>-100 °C</li>
+                            <li>-150 °C</li>
+                            <li>-200 °C</li>
+                            <li>-250 °C</li>
+                        </ul>
+                        <div class="glass">
+                            <div id="surfaceTemp" class="mercury"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="outputColumn">
+                <div class="resultContainer">
+                    <b><span id="atmTempValue">
+                    </span></b>
+                </div>
+                <div class="thermoContainer">
+                    <div class="thermometer">
+                        <ul class="markings">
+                            <li>100 °C</li>
+                            <li>50 °C</li>
+                            <li>0 °C</li>
+                            <li>-50 °C</li>
+                            <li>-100 °C</li>
+                            <li>-150 °C</li>
+                            <li>-200 °C</li>
+                            <li>-250 °C</li>
+                        </ul>
+                        <div class="glass">
+                            <div id="atmTemp" class="mercury"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="outputColumn">
-            <div class="resultContainer">
-                <b><span id="atmTempValue">
-                </span></b>
-            </div>
-            <div class="thermoContainer">
-                <div class="thermometer">
-                    <ul class="markings">
-                        <li>100 °C</li>
-                        <li>50 °C</li>
-                        <li>0 °C</li>
-                        <li>-50 °C</li>
-                        <li>-100 °C</li>
-                        <li>-150 °C</li>
-                        <li>-200 °C</li>
-                        <li>-250 °C</li>
-                    </ul>
-                    <div class="glass">
-                        <div id="atmTemp" class="mercury"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <script type="text/javascript">
         function surfaceTemperature(albedo, solar, emissivity, absorbance){
             const sigma = 5.67e-8
