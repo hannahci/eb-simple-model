@@ -89,12 +89,14 @@
                 width: 25%;
             }
             .resultContainer {
-                padding: 10px 0 10px 0;
+                padding: 10px 30px 10px 0;
+                width: 150px;
                 /* background-color: bisque; */
             }
             .outputColumn {
                 display: flex;
                 flex-direction: column;
+                /* background-color: aquamarine; */
             }
         </style>
     </head>
@@ -148,6 +150,28 @@
                 </div>
             </div>
         </div>
+        <div class="outputColumn">
+            <div class="resultContainer">
+                <b><span id="atmTempValue">
+                </span></b>
+            </div>
+            <div class="thermoContainer">
+                <div class="thermometer">
+                    <ul class="markings">
+                        <li>100 °C</li>
+                        <li>50 °C</li>
+                        <li>0 °C</li>
+                        <li>-50 °C</li>
+                        <li>-100 °C</li>
+                        <li>-150 °C</li>
+                        <li>-200 °C</li>
+                    </ul>
+                    <div class="glass">
+                        <div id="atmTemp" class="mercury"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <script type="text/javascript">
         function surfaceTemperature(albedo, solar, emissivity, absorbance){
@@ -193,16 +217,19 @@
 
             let solar = 1360 * solarPercent / 100
             let surfTemp = surfaceTemperature(albedo, solar, emissivity, absorbance)
-            document.getElementById("surfTempValue").innerHTML = Math.round(surfTemp * 10) / 10 + " °C surface temperature"
+            document.getElementById("surfTempValue").innerHTML = "Surface<br \>temperature:<br \>" + Math.round(surfTemp * 10) / 10 + " °C"
             let atmTemp = atmosphericTemperature(albedo, solar, emissivity, absorbance)
+            document.getElementById("atmTempValue").innerHTML = "Atmospheric<br \>temperature:<br \>" + Math.round(atmTemp * 10) / 10 + " °C"
             
             // TODO: make sure that ultimate temp borders are not in the possible ranges!
             let minTemp = -200
             let maxTemp = 100
             let positionMinTemp = 15
             let positionMaxTemp = 93
-            let posTemp = calcTemperaturePosition(surfTemp, minTemp, maxTemp, positionMinTemp, positionMaxTemp)
-            document.getElementById("surfaceTemp").style.height = posTemp + "%"
+            let posSurfaceTemp = calcTemperaturePosition(surfTemp, minTemp, maxTemp, positionMinTemp, positionMaxTemp)
+            document.getElementById("surfaceTemp").style.height = posSurfaceTemp + "%"
+            let posAtmTemp = calcTemperaturePosition(atmTemp, minTemp, maxTemp, positionMinTemp, positionMaxTemp)
+            document.getElementById("atmTemp").style.height = posAtmTemp + "%"
         }
         update()
     </script>   
