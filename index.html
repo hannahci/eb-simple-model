@@ -1,3 +1,7 @@
+<!-- TODO
+- check in Firefox that there are no line breaks in the new input variables
+- test in Internet explorer
+-->
 <html>
     <head>
         <style>
@@ -118,10 +122,11 @@
 
     <div class="contentContainer">
         <div class="introductionRow">
-            This simple energy balance model assumes an atmosphere that absorbes parts of the
-            incoming solar radiation ("optical absorbance") and has a specified infrared
-            emissivity.<br\>
-            You can see the calculated surface and atmospheric temperatures to the right.
+            This is a simple model of Earth's radiative balance. The model operates with an
+            albedo and absorbance affecting the incoming solar radiation, and an emissivity
+            describing the infrared properties of the atmosphere. You can also scale the
+            intensity of the incoming solar radiation. The model calculates the global mean
+            temperature of the surface and the atmosphere. 
         </div>
         <div class="modelContainer">
             <div class="inputRowsContainer">
@@ -139,7 +144,7 @@
                 </div>
                 <div class="inputRow">
                     <label for="absorbInput">Optical absorbance:</label>
-                    <input type="range" min="0" max="300" value="105" id="absorbInput" oninput="update()">
+                    <input type="range" min="0" max="500" value="105" id="absorbInput" oninput="update()">
                     <span id="absorbValue">
                     </span>
                 </div>
