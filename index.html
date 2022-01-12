@@ -1,5 +1,5 @@
 <!-- TODO
-- test in Internet explorer
+- test in Internet explorer: doesn't work in IE11 on Win7
 -->
 <html>
     <head>
@@ -78,23 +78,30 @@
                 flex-direction: row;
                 /* background-color: mediumaquamarine; */
             }
+            .titleRow {
+                display: flex;
+                flex-direction: column;
+                padding: 30px 30px 0 10px;
+                font-size: x-large;
+                /* background-color: crimson; */
+            }
             .introductionRow {
                 display: flex;
                 flex-direction: column;
-                padding: 30px 30px 0 30px;
+                padding: 10px;
                 /* background-color: blueviolet; */
             }
             .inputRowsContainer {
                 display: flex;
                 flex-direction: column;
-                /* background-color: palevioletred; */
+                background-color: palevioletred;
                 width: 570px;
                 padding: 10px;
             }
             .inputRow {
                 display: flex;
                 flex-direction: row;
-                /* background-color: aquamarine; */
+                background-color: aquamarine;
                 gap: 10px;
                 padding-bottom: 10px;
                 align-items: baseline;
@@ -118,11 +125,11 @@
                 /* padding: 10px; */
                 /* background-color: chartreuse; */
             }
-            .image {
+            #calcImage {
                 display: flex;
                 flex-direction: row;
                 /* background-color: blueviolet; */
-                display: none;
+                visibility: hidden;
             }
             .resultContainer {
                 padding: 10px 50px 10px 0;
@@ -138,15 +145,11 @@
     </head>
 
     <div class="contentContainer">
-        <div class="introductionRow">
-            This is a simple model of Earth's radiative balance. The model operates with an
-            albedo and absorbance affecting the incoming solar radiation, and an emissivity
-            describing the infrared properties of the atmosphere. You can also scale the
-            intensity of the incoming solar radiation. The model calculates the global mean
-            temperature of the surface and the atmosphere.
+        <div class="titleRow">
+            <b>Simple energy balance model of the Earth</b>
         </div>
-        <div class="introductionRow" style="padding: 10px 0 20px 30px">
-            The assumptions and the math of the model can be viewed below.
+        <div class="introductionRow">
+            For details, see text below the graphics
         </div>
         <div class="modelContainer">
             <div class="inputRowsContainer">
@@ -168,11 +171,15 @@
                     <span id="absorbValue">
                     </span>
                 </div>
-                <div class="inputRow">
+                <div class="inputRow" id="greenhouseInput" style="visibility: hidden;">
                     <label for="emissInput">Infrared emissivity:</label>
                     <input type="range" min="70" max="100" value="90" id="emissInput" oninput="update()">
                     <span id="emissValue">
                     </span>
+                </div>
+                <div class="inputRow"> 
+                    <label for="greenhouse">Add greenhouse effect</label>
+                    <input type="checkbox" id="greenhouse" oninput="addRemoveGHE()" unchecked>
                 </div>
                 <div class="buttonRow">
                     <div class="inputButton">
@@ -180,7 +187,7 @@
                     </div>
                 </div>
                 <div class="calculationsRow">
-                    <div class="image" id="calcImage">
+                    <div id="calcImage" style="visibility: hidden;">
                         <img src="calculations.png" alt="Calculation image" width="500" height="650">
                     </div>
                 </div>
@@ -261,19 +268,28 @@
             const position = diffToMin / diffMinMax * diffPositionMinMax + positionMinTemp
             return position
         }
+        function toggleVisibility(elementId) {
+            const currentState = document.getElementById(elementId).style.visibility
+            let newState = ""
+            if (currentState == "hidden") {
+                newState = "visible"
+            } else {
+                newState = "hidden"
+            }
+            document.getElementById(elementId).style.visibility = newState
+            return newState
+        }
+        function addRemoveGHE() {
+            let newState = toggleVisibility("greenhouseInput")
+        }
         function showCalculations(){
-            const image = document.querySelector(".image")
-            const currentState = getComputedStyle(image).display
-            console.log("Current state: ", currentState)
-            if (currentState == "none") {
-                document.getElementById("calcImage").style.display = "block"
-                document.getElementById("calcButton").value = "Hide calculations"
-            } else if (currentState == "block") {
-                document.getElementById("calcImage").style.display = "none"
+            let newState = toggleVisibility("calcImage")
+            if (newState == "hidden") {
                 document.getElementById("calcButton").value = "Show calculations"
+            } else {
+                document.getElementById("calcButton").value = "Hide calculations"
             }
         }
-        console.log('atmTemp = ', atmosphericTemperature(0.3, 1360, 0.9, 0.105))
         function update(){
             let solarPercent = document.getElementById("solarInput").value
             document.getElementById("solarValue").innerHTML = solarPercent + " % of present"
