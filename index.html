@@ -165,21 +165,27 @@
                     <span id="albedoValue">
                     </span>
                 </div>
-                <div class="inputRow">
-                    <label for="absorbInput">Optical absorbance:</label>
-                    <input type="range" min="0" max="500" value="105" id="absorbInput" oninput="update()">
-                    <span id="absorbValue">
-                    </span>
-                </div>
-                <div class="inputRow" id="greenhouseInput" style="visibility: hidden;">
+                <div class="inputRow" id="emissInputRow" style="visibility: hidden;">
                     <label for="emissInput">Infrared emissivity:</label>
                     <input type="range" min="70" max="100" value="90" id="emissInput" oninput="update()">
                     <span id="emissValue">
                     </span>
                 </div>
-                <div class="inputRow"> 
-                    <label for="greenhouse">Add greenhouse effect</label>
-                    <input type="checkbox" id="greenhouse" oninput="addRemoveGHE()" unchecked>
+                <div class="inputRow" id="absorbInputRow" style="visibility: hidden;">
+                    <label for="absorbInput">Optical absorbance:</label>
+                    <input type="range" min="0" max="500" value="105" id="absorbInput" oninput="update()">
+                    <span id="absorbValue">
+                    </span>
+                </div>
+                <div class="inputRow" style="padding: 10px 0 10px 0;"> 
+                    <label for="modelLevel" style="width: 40%;">Choose the model version:</label>
+                    <select id="modelLevel" oninput="selectLevel()" autocomplete="off">
+                      <option value="simplest" selected>Simplest version</option>
+                      <option value="withGreenhouse">With greenhouse effect</option>
+                      <option value="withAll">With greenhouse effect & solar absorption</option>
+                    </select> 
+                    <!-- <label for="greenhouse">Add greenhouse effect</label>
+                    <input type="checkbox" id="greenhouse" oninput="addRemoveGHE()" unchecked> -->
                 </div>
                 <div class="buttonRow">
                     <div class="inputButton">
@@ -215,7 +221,7 @@
                     </div>
                 </div>
             </div>
-            <div class="outputColumn">
+            <div class="outputColumn" id="atmThermometerColumn" style="visibility: hidden;">
                 <div class="resultContainer">
                     <b><span id="atmTempValue">
                     </span></b>
@@ -241,7 +247,7 @@
         </div>
     </div>
     <script type="text/javascript">
-        function surfaceTemperature(albedo, solar, emissivity, absorbance){
+        function surfaceTemperatureWithAtmosphere(albedo, solar, emissivity, absorbance){
             const sigma = 5.67e-8
             const aE = albedo * (1 - absorbance)**2
             const aPrime = (1 - absorbance) * (1 - albedo)
@@ -249,8 +255,14 @@
             const tempCelsius = temp - 273.15
             return tempCelsius
         }
+        function surfaceTemperatureNoAtmosphere(albedo, solar){
+            const sigma = 5.67e-8
+            const temp = Math.pow((solar*(1 - albedo))/(4 * sigma), 0.25)
+            const tempCelsius = temp - 273.15
+            return tempCelsius
+        }
         function atmosphericTemperature(albedo, solar, emissivity, absorbance){
-            const surfTemp = surfaceTemperature(albedo, solar, emissivity, absorbance) + 273.15
+            const surfTemp = surfaceTemperatureWithAtmosphere(albedo, solar, emissivity, absorbance) + 273.15
             const surfTemp4 = Math.pow(surfTemp, 4)
             const sigma = 5.67e-8
             const aE = albedo * (1 - absorbance)**2
@@ -279,6 +291,32 @@
             document.getElementById(elementId).style.visibility = newState
             return newState
         }
+        function hideElement(elementId) {
+            document.getElementById(elementId).style.visibility = "hidden"
+        }
+        function showElement(elementId) {
+            document.getElementById(elementId).style.visibility = "visible"
+        }
+        function selectLevel() {
+            const selectedLevel = document.getElementById("modelLevel").value
+            console.log("Newly selected: ", selectedLevel)
+            if (selectedLevel == "withAll") {
+                showElement("emissInputRow")
+                showElement("absorbInputRow")
+                showElement("atmThermometerColumn")
+                document.getElementById("absorbInput").value = 105 // default-value
+            } else if (selectedLevel == "withGreenhouse") {
+                showElement("emissInputRow")
+                hideElement("absorbInputRow")
+                showElement("atmThermometerColumn")
+                document.getElementById("absorbInput").value = 0
+            } else {
+                hideElement("emissInputRow")
+                hideElement("absorbInputRow")
+                document.getElementById("absorbInput").value = 0
+            }
+            update()
+        }
         function addRemoveGHE() {
             let newState = toggleVisibility("greenhouseInput")
         }
@@ -302,21 +340,31 @@
 
             let emissivity = document.getElementById("emissInput").value / 100
             document.getElementById("emissValue").innerHTML = emissivity
+            console.log("solar, albedo, emiss, absorb", solarPercent, albedo, emissivity, absorbance)
 
-            let solar = 1360 * solarPercent / 100
-            let surfTemp = surfaceTemperature(albedo, solar, emissivity, absorbance)
-            document.getElementById("surfTempValue").innerHTML = "Surface<br \>temperature:<br \>" + Math.round(surfTemp * 10) / 10 + " °C"
-            let atmTemp = atmosphericTemperature(albedo, solar, emissivity, absorbance)
-            document.getElementById("atmTempValue").innerHTML = "Atmospheric<br \>temperature:<br \>" + Math.round(atmTemp * 10) / 10 + " °C"
-            
+            let solar = 1361 * solarPercent / 100
+            let currentLevel = document.getElementById("modelLevel").value
+            let surfTemp = 0
+            let atmTemp = 0
+            if (currentLevel == "simplest") {
+                surfTemp = surfaceTemperatureNoAtmosphere(albedo, solar)
+                document.getElementById("surfTempValue").innerHTML = "Surface<br \>temperature:<br \>" + Math.round(surfTemp * 10) / 10 + " °C"
+            } else {
+                surfTemp = surfaceTemperatureWithAtmosphere(albedo, solar, emissivity, absorbance)
+                document.getElementById("surfTempValue").innerHTML = "Surface<br \>temperature:<br \>" + Math.round(surfTemp * 10) / 10 + " °C"
+                atmTemp = atmosphericTemperature(albedo, solar, emissivity, absorbance)
+                document.getElementById("atmTempValue").innerHTML = "Atmospheric<br \>temperature:<br \>" + Math.round(atmTemp * 10) / 10 + " °C"
+            }
             let minTemp = -250
             let maxTemp = 100
             let positionMinTemp = 16
             let positionMaxTemp = 93
             let posSurfaceTemp = calcTemperaturePosition(surfTemp, minTemp, maxTemp, positionMinTemp, positionMaxTemp)
             document.getElementById("surfaceTemp").style.height = posSurfaceTemp + "%"
-            let posAtmTemp = calcTemperaturePosition(atmTemp, minTemp, maxTemp, positionMinTemp, positionMaxTemp)
-            document.getElementById("atmTemp").style.height = posAtmTemp + "%"
+            if (currentLevel != "simplest") {
+                let posAtmTemp = calcTemperaturePosition(atmTemp, minTemp, maxTemp, positionMinTemp, positionMaxTemp)
+                document.getElementById("atmTemp").style.height = posAtmTemp + "%"
+            }
         }
         update()
     </script>   
