@@ -184,8 +184,11 @@
                       <option value="withGreenhouse">With greenhouse effect</option>
                       <option value="withAll">With greenhouse effect & solar absorption</option>
                     </select> 
-                    <!-- <label for="greenhouse">Add greenhouse effect</label>
-                    <input type="checkbox" id="greenhouse" oninput="addRemoveGHE()" unchecked> -->
+                </div>
+                <div class="inputRow">
+                    <div style="padding-left: 10px;">
+                        <img id="modelImage" src="simplest-version.png" width="90%">
+                    </div>
                 </div>
                 <div class="buttonRow">
                     <div class="inputButton">
@@ -300,21 +303,29 @@
         function selectLevel() {
             const selectedLevel = document.getElementById("modelLevel").value
             console.log("Newly selected: ", selectedLevel)
+            console.log("Image source: ", document.getElementById("modelImage").src)
             if (selectedLevel == "withAll") {
                 showElement("emissInputRow")
                 showElement("absorbInputRow")
                 showElement("atmThermometerColumn")
                 document.getElementById("absorbInput").value = 105 // default-value
+                document.getElementById("modelImage").src = "third-version.png"
+                console.log("in if - Image source: ", document.getElementById("modelImage").src)
             } else if (selectedLevel == "withGreenhouse") {
                 showElement("emissInputRow")
                 hideElement("absorbInputRow")
                 showElement("atmThermometerColumn")
                 document.getElementById("absorbInput").value = 0
+                document.getElementById("modelImage").src = "second-version.png"
+                console.log("in if - Image source: ", document.getElementById("modelImage").src)
             } else {
                 hideElement("emissInputRow")
                 hideElement("absorbInputRow")
                 document.getElementById("absorbInput").value = 0
+                document.getElementById("modelImage").src = "simplest-version.png"
+                console.log("in if - Image source: ", document.getElementById("modelImage").src)
             }
+            console.log("Afterwards - Image source: ", document.getElementById("modelImage").src)
             update()
         }
         function addRemoveGHE() {
