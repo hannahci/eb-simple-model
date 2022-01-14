@@ -1,5 +1,6 @@
 <!-- TODO
 - test in Internet explorer: doesn't work in IE11 on Win7
+- make calculations change to correct one if they are shown and a different version is being selected
 -->
 <html>
     <head>
@@ -136,7 +137,17 @@
                 width: 150px;
                 /* background-color: bisque; */
             }
-            .outputColumn {
+            .rightOuterColumn {
+                display: flex;
+                flex-direction: column;
+                /* background-color: darkorange; */
+            }
+            .rightRow {
+                display: flex;
+                flex-direction: row;
+                /* background-color: dodgerblue; */
+            }
+            .thermometerColumn {
                 display: flex;
                 flex-direction: column;
                 /* background-color: aquamarine; */
@@ -197,54 +208,90 @@
                 </div>
                 <div class="calculationsRow">
                     <div id="calcImage" style="visibility: hidden;">
-                        <img src="calculations.png" alt="Calculation image" width="500" height="650">
+                        <img id="calcImageImg" src="eb_model1.png" alt="Calculation image" width="100%">
                     </div>
                 </div>
             </div>
-            <div class="outputColumn">
-                <div class="resultContainer">
-                    <b><span id="surfTempValue">
-                    </span></b>
-                </div>
-                <div class="thermoContainer">
-                    <div class="thermometer">
-                        <ul class="markings">
-                            <li>100 °C</li>
-                            <li>50 °C</li>
-                            <li>0 °C</li>
-                            <li>-50 °C</li>
-                            <li>-100 °C</li>
-                            <li>-150 °C</li>
-                            <li>-200 °C</li>
-                            <li>-250 °C</li>
-                        </ul>
-                        <div class="glass">
-                            <div id="surfaceTemp" class="mercury"></div>
+            <div class="rightOuterColumn">
+                <div class="rightRow">
+                    <div class="thermometerColumn">
+                        <div class="resultContainer">
+                            <b><span id="surfTempValue">
+                            </span></b>
+                        </div>
+                        <div class="thermoContainer">
+                            <div class="thermometer">
+                                <ul class="markings">
+                                    <li>100 °C</li>
+                                    <li>50 °C</li>
+                                    <li>0 °C</li>
+                                    <li>-50 °C</li>
+                                    <li>-100 °C</li>
+                                    <li>-150 °C</li>
+                                    <li>-200 °C</li>
+                                    <li>-250 °C</li>
+                                </ul>
+                                <div class="glass">
+                                    <div id="surfaceTemp" class="mercury"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thermometerColumn" id="atmThermometerColumn" style="visibility: hidden;">
+                        <div class="resultContainer">
+                            <b><span id="atmTempValue">
+                            </span></b>
+                        </div>
+                        <div class="thermoContainer">
+                            <div class="thermometer">
+                                <ul class="markings">
+                                    <li>100 °C</li>
+                                    <li>50 °C</li>
+                                    <li>0 °C</li>
+                                    <li>-50 °C</li>
+                                    <li>-100 °C</li>
+                                    <li>-150 °C</li>
+                                    <li>-200 °C</li>
+                                    <li>-250 °C</li>
+                                </ul>
+                                <div class="glass">
+                                    <div id="atmTemp" class="mercury"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="outputColumn" id="atmThermometerColumn" style="visibility: hidden;">
-                <div class="resultContainer">
-                    <b><span id="atmTempValue">
-                    </span></b>
+                <div class="rightOuterColumn" style="padding-top: 40px; max-width: 700px;">
+                    Our planet is heated by absorbing solar radiation and cooled by emitting
+                    infrared radiation. There must be a balance between the incoming and outgoing
+                    radiation, otherwise the mean temperature of Earth will change. This model
+                    calculates the temperature that results in a balance, for a simple model of
+                    the planet.
                 </div>
-                <div class="thermoContainer">
-                    <div class="thermometer">
-                        <ul class="markings">
-                            <li>100 °C</li>
-                            <li>50 °C</li>
-                            <li>0 °C</li>
-                            <li>-50 °C</li>
-                            <li>-100 °C</li>
-                            <li>-150 °C</li>
-                            <li>-200 °C</li>
-                            <li>-250 °C</li>
-                        </ul>
-                        <div class="glass">
-                            <div id="atmTemp" class="mercury"></div>
-                        </div>
-                    </div>
+                <div class="rightOuterColumn" style="padding-top: 10px; max-width: 700px;">
+                    The model in its simplest form neglects the atmosphere. Earth’s temperature
+                    is then only governed by the magnitude of solar radiation and the fraction
+                    of solar radiation that is reflected. This fraction is called the planet’s
+                    albedo, A.
+                </div>
+                <div class="rightOuterColumn" style="padding-top: 10px; max-width: 700px;">
+                    You can turn on an approximation of the greenhouse effect. How effective the
+                    atmosphere is to emit radiation is called the emissivity, &epsilon;. The fraction of
+                    emission from the surface that reaches space is 1-&epsilon;.
+                </div>
+                <div class="rightOuterColumn" style="padding-top: 10px; max-width: 700px;">
+                    Finally, you can also turn on that the atmosphere absorbs a fraction of the
+                    solar radiation passing it. This is called the absorptance, &alpha;.
+                </div>
+                <div class="rightOuterColumn" style="padding-top: 10px; max-width: 700px;">
+                    Some details: The magnitude of solar radiation outside of the atmosphere
+                    is called the solar constant, S. Averaged over all positions on Earth and
+                    day/night, the average solar radiation entering the atmosphere is S/4.
+                    The absorptance in the model is the one-way attenuation. All the absorption
+                    is assumed to take place above where the planet reflects solar radiation
+                    (in real life this would partly be above the clouds). The surface and the
+                    atmosphere emitt according to the Stefan-Boltzmann law. An emissivity of 1
+                    is assumed for the surface.
                 </div>
             </div>
         </div>
@@ -302,6 +349,7 @@
         }
         function selectLevel() {
             const selectedLevel = document.getElementById("modelLevel").value
+            const calculationsVisible = document.getElementById("calcImage").visibility
             console.log("Newly selected: ", selectedLevel)
             console.log("Image source: ", document.getElementById("modelImage").src)
             if (selectedLevel == "withAll") {
@@ -310,6 +358,9 @@
                 showElement("atmThermometerColumn")
                 document.getElementById("absorbInput").value = 105 // default-value
                 document.getElementById("modelImage").src = "third-version.png"
+                if (calculationsVisible == "visible") {
+                    document.getElementById("calcImageImg").src = "eb_model3.png"
+                }
                 console.log("in if - Image source: ", document.getElementById("modelImage").src)
             } else if (selectedLevel == "withGreenhouse") {
                 showElement("emissInputRow")
@@ -317,12 +368,19 @@
                 showElement("atmThermometerColumn")
                 document.getElementById("absorbInput").value = 0
                 document.getElementById("modelImage").src = "second-version.png"
+                if (calculationsVisible == "visible") {
+                    document.getElementById("calcImageImg").src = "eb_model2.png"
+                }
                 console.log("in if - Image source: ", document.getElementById("modelImage").src)
             } else {
                 hideElement("emissInputRow")
                 hideElement("absorbInputRow")
+                hideElement("atmThermometerColumn")
                 document.getElementById("absorbInput").value = 0
                 document.getElementById("modelImage").src = "simplest-version.png"
+                if (calculationsVisible == "visible") {
+                    document.getElementById("calcImageImg").src = "eb_model1.png"
+                }
                 console.log("in if - Image source: ", document.getElementById("modelImage").src)
             }
             console.log("Afterwards - Image source: ", document.getElementById("modelImage").src)
@@ -332,6 +390,14 @@
             let newState = toggleVisibility("greenhouseInput")
         }
         function showCalculations(){
+            const selectedLevel = document.getElementById("modelLevel").value
+            if (selectedLevel == "withAll") {
+                document.getElementById("calcImageImg").src = "eb_model3.png"
+            } else if (selectedLevel == "withGreenhouse") {
+                document.getElementById("calcImageImg").src = "eb_model2.png"
+            } else {
+                document.getElementById("calcImageImg").src = "eb_model1.png"
+            }
             let newState = toggleVisibility("calcImage")
             if (newState == "hidden") {
                 document.getElementById("calcButton").value = "Show calculations"
