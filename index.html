@@ -208,7 +208,7 @@
                 </div>
                 <div class="calculationsRow">
                     <div id="calcImage" style="visibility: hidden;">
-                        <img id="calcImageImg" src="eb_model1.png" alt="Calculation image" width="100%">
+                        <img id="calcImageImg" src="eb_model1.png" alt="Calculation image" width="80%">
                     </div>
                 </div>
             </div>
@@ -349,7 +349,7 @@
         }
         function selectLevel() {
             const selectedLevel = document.getElementById("modelLevel").value
-            const calculationsVisible = document.getElementById("calcImage").visibility
+            const calculationsVisible = document.getElementById("calcImage").style.visibility
             console.log("Newly selected: ", selectedLevel)
             console.log("Image source: ", document.getElementById("modelImage").src)
             if (selectedLevel == "withAll") {
