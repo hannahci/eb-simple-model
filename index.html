@@ -152,6 +152,15 @@
                 flex-direction: column;
                 /* background-color: aquamarine; */
             }
+            #footer {
+                font-size: smaller;
+                position:fixed;
+                bottom:0;
+                width:100%;
+                padding-top: 5px;
+                height:25px;   /* Height of the footer */
+                background:white;
+            }
         </style>
     </head>
 
@@ -283,7 +292,7 @@
                     Finally, you can also turn on that the atmosphere absorbs a fraction of the
                     solar radiation passing it. This is called the absorptance, &alpha;.
                 </div>
-                <div class="rightOuterColumn" style="padding-top: 10px; max-width: 700px;">
+                <div class="rightOuterColumn" style="padding-top: 10px;padding-bottom: 40px; max-width: 700px;">
                     Some details: The magnitude of solar radiation outside of the atmosphere
                     is called the solar constant, S. Averaged over all positions on Earth and
                     day/night, the average solar radiation entering the atmosphere is S/4.
@@ -295,6 +304,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div id="footer">Constructed by Hannah Frostenberg and Patrick Eriksson, Chalmers University of Technology
     </div>
     <script type="text/javascript">
         function surfaceTemperatureWithAtmosphere(albedo, solar, emissivity, absorbance){
