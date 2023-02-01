@@ -422,13 +422,13 @@
             document.getElementById("solarValue").innerHTML = solarPercent + " % of present"
 
             let albedo = document.getElementById("albedoInput").value / 100
-            document.getElementById("albedoValue").innerHTML = albedo
+            document.getElementById("albedoValue").innerHTML = albedo.toFixed(2)
 
             let absorbance = document.getElementById("absorbInput").value / 1000
-            document.getElementById("absorbValue").innerHTML = absorbance
+            document.getElementById("absorbValue").innerHTML = absorbance.toFixed(3)
 
             let emissivity = document.getElementById("emissInput").value / 1000
-            document.getElementById("emissValue").innerHTML = emissivity
+            document.getElementById("emissValue").innerHTML = emissivity.toFixed(3)
             console.log("solar, albedo, emiss, absorb", solarPercent, albedo, emissivity, absorbance)
 
             let solar = 1361 * solarPercent / 100
